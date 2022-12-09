@@ -1,20 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Movie Database</title>
-</head>
-<body>
-    <main>
-        <header>
-</main>
-        </header>
-    <body>
-        
-    </body>
-    <footer></footer>
+    <link rel="stylesheet" href="./css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="./app.js" defer type="module"></script>
+  </head>
+  <body id="home">
+    <header class="header">
+      <div class="banner container">
+        <h1 class="title__h1">EZ VISION</h1>
+        <h2 class="title__h2">Watch anything you want</h2>
+        <div class="search__content">
+          <form action="/">
+            <div class="form__movies">
+              <label class="label" for="movie">Find movies or TV shows</label>
+              <input
+                class="keyword__input"
+                type="text"
+                id="keyWordInput"
+                placeholder="Enter a keyword"
+              />
+            </div>
+
+            <div class="radio__buttons">
+              <input
+                class="input__tv-series"
+                type="radio"
+                id="tv-series"
+                name="choice"
+                value="tv"
+              />
+              <label for="tv-series">TV-Series</label>
+
+              <input
+                class="input_movie"
+                type="radio"
+                id="movies"
+                name="choice"
+                value="movie"
+              />
+              <label for="movies">Movies</label>
+            </div>
+
+            <button id="submitButton" class="btn" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
+    </header>
+    <main class="main__content">
+      <div class="container">
+        <ul class="movie__ul"></ul>
+      </div>
     </main>
-</body>
+    <footer></footer>
+  </body>
 </html>

@@ -166,6 +166,10 @@ p {
   color: var(--cultured);
 }
 
+a {
+  text-decoration: none;
+}
+
 .radio__buttons {
   color: var(--mango);
 }

@@ -21,8 +21,6 @@ const APP = {
     document.querySelector("form").addEventListener("submit", (ev) => {
       ev.preventDefault();
       let input = document.querySelector("#keyWordInput").value.trim();
-      // .split(" ")
-      // .join("&");
       APP.queryString = input;
       if (!APP.cat) {
         console.log("Please select a category");
@@ -68,11 +66,11 @@ const APP = {
     data["results"].forEach((item) => {
       const li = document.createElement("li");
       if (item.poster_path === null) {
-        li.innerHTML = `<a href="#"><img class="poster__img" src="./images/placeholder.png"><div><h3>${item.original_title}</h3>
+        li.innerHTML = `<a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"><div><h3>${item.original_title}</h3>
         <p>${item.overview}</p></div></a>
         `;
       } else {
-        li.innerHTML = `<a href="#"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"><div><h3>${item.original_title}</h3>
+        li.innerHTML = `<a class="a__li" href="https://api.themoviedb.org/3/movie/${item.id}/credits?api_key=516113cfd57ae5d6cb785a6c5bb76fc0"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"><div><h3>${item.original_title}</h3>
         <p>${item.overview}</p></div></a>`;
       }
       APP.df.append(li);
@@ -83,10 +81,10 @@ const APP = {
     data["results"].forEach((item) => {
       const li = document.createElement("li");
       if (item.poster_path === null) {
-        li.innerHTML = `<a href="#"><img class="poster__img" src="./images/placeholder.png"><div><h3>${item.name}</h3>
+        li.innerHTML = `<a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"><div><h3>${item.name}</h3>
         <p>${item.overview}</p></div>`;
       } else {
-        li.innerHTML = `<a href="https://api.themoviedb.org/3/tv/${item.id}/credits?api_key=516113cfd57ae5d6cb785a6c5bb76fc0"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"><div><h3>${item.name}</h3>
+        li.innerHTML = `<a class="a__li" href="https://api.themoviedb.org/3/tv/${item.id}/credits?api_key=516113cfd57ae5d6cb785a6c5bb76fc0"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"><div><h3>${item.name}</h3>
         <p>${item.overview}</p></div></a>`;
       }
       APP.df.append(li);

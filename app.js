@@ -4,6 +4,7 @@ const APP = {
   cat: "",
   queryString: "",
   url: "",
+  h3MessageScreen: document.querySelector(".content__message"),
   init: () => {
     APP.getCategory();
     APP.getData();
@@ -41,6 +42,7 @@ const APP = {
     APP.getFetch(APP.url);
   },
   getFetch: (url) => {
+    APP.h3MessageScreen.innerHTML = "";
     APP.ul.innerHTML = "";
     fetch(url)
       .then((response) => {
@@ -50,7 +52,9 @@ const APP = {
       .then((data) => {
         console.log(data);
         if (data.results.length === 0) {
-          APP.noResultFound();
+          APP.showScreenMessage(
+            "There are no results, please try another title."
+          );
         } else if (APP.cat === "movie") {
           console.log("movie is working");
           APP.movieConstructor(data);
@@ -66,12 +70,12 @@ const APP = {
     data["results"].forEach((item) => {
       const li = document.createElement("li");
       if (item.poster_path === null) {
-        li.innerHTML = `<a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"><div><h3>${item.original_title}</h3>
-        <p>${item.overview}</p></div></a>
+        li.innerHTML = `<a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"></a><div><h3>${item.original_title}</h3>
+        <p>${item.overview}</p></div>
         `;
       } else {
-        li.innerHTML = `<a class="a__li" href="https://api.themoviedb.org/3/movie/${item.id}/credits?api_key=516113cfd57ae5d6cb785a6c5bb76fc0"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"><div><h3>${item.original_title}</h3>
-        <p>${item.overview}</p></div></a>`;
+        li.innerHTML = `<a class="a__li" href="https://api.themoviedb.org/3/movie/${item.id}/credits?api_key=516113cfd57ae5d6cb785a6c5bb76fc0"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.original_title}</h3>
+        <p>${item.overview}</p><button>Learn More</button></div>`;
       }
       APP.df.append(li);
     });
@@ -80,20 +84,21 @@ const APP = {
     console.log(data["results"]);
     data["results"].forEach((item) => {
       const li = document.createElement("li");
+
       if (item.poster_path === null) {
-        li.innerHTML = `<a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"><div><h3>${item.name}</h3>
+        li.innerHTML = `
+        <a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"><a/><div><h3>${item.name}</h3>
         <p>${item.overview}</p></div>`;
       } else {
-        li.innerHTML = `<a class="a__li" href="https://api.themoviedb.org/3/tv/${item.id}/credits?api_key=516113cfd57ae5d6cb785a6c5bb76fc0"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"><div><h3>${item.name}</h3>
-        <p>${item.overview}</p></div></a>`;
+        li.innerHTML = `<a class="a__li" href="https://api.themoviedb.org/3/tv/${item.id}/credits?api_key=516113cfd57ae5d6cb785a6c5bb76fc0"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.name}</h3>
+        <p>${item.overview}</p></div>`;
       }
       APP.df.append(li);
     });
   },
-  noResultFound: () => {
-    const li = document.createElement("li");
-    li.innerHTML = `<p>No results found</p>`;
-    APP.df.append(li);
+  showScreenMessage: (msg) => {
+    APP.h3MessageScreen.innerHTML = msg;
+    // APP.df.append(li);
   },
 };
 

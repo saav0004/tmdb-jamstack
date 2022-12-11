@@ -24,10 +24,13 @@ const APP = {
       let input = document.querySelector("#keyWordInput").value.trim();
       APP.queryString = input;
       if (!APP.cat) {
+        APP.h3MessageScreen.innerHTML = "";
+        APP.showScreenMessage("Please select a category");
         console.log("Please select a category");
         return;
       }
       if (!APP.queryString) {
+        APP.showScreenMessage("Please write in the field");
         console.log("Please write in the field");
         return;
       }
@@ -42,8 +45,6 @@ const APP = {
     APP.getFetch(APP.url);
   },
   getFetch: (url) => {
-    APP.h3MessageScreen.innerHTML = "";
-    APP.ul.innerHTML = "";
     fetch(url)
       .then((response) => {
         console.log("got response");
@@ -52,16 +53,29 @@ const APP = {
       .then((data) => {
         console.log(data);
         if (data.results.length === 0) {
+          APP.h3MessageScreen.innerHTML = "";
+          APP.ul.innerHTML = "";
           APP.showScreenMessage(
-            "There are no results, please try another title."
+            `There are no results for "${APP.queryString}", please try another title.`
           );
         } else if (APP.cat === "movie") {
           console.log("movie is working");
+          APP.h3MessageScreen.innerHTML = "";
+          APP.ul.innerHTML = "";
           APP.movieConstructor(data);
+          APP.showScreenMessage(
+            `Movie titles related to: "${APP.queryString}" `
+          );
         } else {
+          APP.ul.innerHTML = "";
+          APP.h3MessageScreen.innerHTML = "";
           console.log("tv is working");
           APP.tvConstructor(data);
+          APP.showScreenMessage(`TV titles related to: "${APP.queryString}"`);
         }
+        // APP.showScreenMessage(
+        //   `No results for titles related to: "${APP.queryString}" `
+        // );
         APP.ul.append(APP.df);
       });
   },

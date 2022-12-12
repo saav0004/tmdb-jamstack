@@ -88,10 +88,11 @@ const APP = {
         <p>${item.overview}</p></div>
         `;
       } else {
-        li.innerHTML = `<a class="a__li" href="https://api.themoviedb.org/3/movie/${item.id}/credits?api_key=516113cfd57ae5d6cb785a6c5bb76fc0"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.original_title}</h3>
+        li.innerHTML = `<a class="a__li" href="/credits.html#/movie/${item.id}/${APP.queryString}"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.original_title}</h3>
         <p>${item.overview}</p><button>Learn More</button></div>`;
       }
       APP.df.append(li);
+      history.pushState(null, "", `./index.html#/movie/${APP.queryString}`);
     });
   },
   tvConstructor: function (data) {
@@ -104,10 +105,15 @@ const APP = {
         <a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"><a/><div><h3>${item.name}</h3>
         <p>${item.overview}</p></div>`;
       } else {
-        li.innerHTML = `<a class="a__li" href="https://api.themoviedb.org/3/tv/${item.id}/credits?api_key=516113cfd57ae5d6cb785a6c5bb76fc0"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.name}</h3>
+        li.innerHTML = `<a class="a__li" href="/credits.html#/tv/${item.id}/${APP.queryString}"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.name}</h3>
         <p>${item.overview}</p></div>`;
       }
       APP.df.append(li);
+      history.pushState(
+        (APP.media, APP.queryString),
+        "",
+        `./index.html#/tv/${APP.queryString}`
+      );
     });
   },
   showScreenMessage: (msg) => {
@@ -117,6 +123,9 @@ const APP = {
 };
 
 document.addEventListener("DOMContentLoaded", APP.init);
+
+// credits shape:
+// https://api.themoviedb.org/3/movie/${item.id}/credits?api_key=516113cfd57ae5d6cb785a6c5bb76fc0"
 
 // const baseURL = "https://api.themoviedb.org";
 // const movieSearchURL = `/3/search/movie?api_key=`;

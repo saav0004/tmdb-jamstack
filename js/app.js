@@ -6,6 +6,8 @@ const APP = {
   url: "",
   h3MessageScreen: document.querySelector(".content__message"),
   init: () => {
+    APP.checkState();
+    APP.checkStateChange();
     APP.getCategory();
     APP.getData();
   },
@@ -92,7 +94,11 @@ const APP = {
         <p>${item.overview}</p><button>Learn More</button></div>`;
       }
       APP.df.append(li);
-      history.pushState(null, "", `./index.html#/movie/${APP.queryString}`);
+      history.pushState(
+        { cat: APP.cat, queryString: APP.queryString },
+        "",
+        `index.html#/movie/${APP.queryString}`
+      );
     });
   },
   tvConstructor: function (data) {
@@ -110,15 +116,39 @@ const APP = {
       }
       APP.df.append(li);
       history.pushState(
-        (APP.media, APP.queryString),
+        {
+          cat: APP.cat,
+          queryString: APP.queryString,
+        },
         "",
-        `./index.html#/tv/${APP.queryString}`
+        `index.html#/tv/${APP.queryString}`
       );
     });
   },
   showScreenMessage: (msg) => {
     APP.h3MessageScreen.innerHTML = msg;
     // APP.df.append(li);
+  },
+  checkState: function () {
+    if (history.state) {
+      let tvButton = document.querySelector("#tv-series");
+      let movieButton = document.querySelector("#movies");
+      let searchBox = document.querySelector("#keyWordInput");
+      if (history.state["cat"] === "movie") {
+        movieButton.checked = true;
+      } else {
+        tvButton.checked = true;
+      }
+      searchBox.value = history.state["queryString"];
+      APP.cat = history.state["cat"];
+      APP.queryString = history.state["queryString"];
+    }
+  },
+  checkStateChange: function () {
+    window.addEventListener("popstate", () => {
+      console.log("changed");
+      APP.checkState();
+    });
   },
 };
 
@@ -161,8 +191,8 @@ document.addEventListener("DOMContentLoaded", APP.init);
 // * Responsive mobile first layout.
 // * Show|movie cards change orientation to make better use of available space.
 // * Credit cards shown as a grid.
-// * Custom accessible colour scheme.
-// * Google fonts used.
+// ? Custom accessible colour scheme.
+// ? Google fonts used.
 // * All the colours and font sizes are accessible and readable at all screen sizes.
 // * Good design principles are applied.
 
@@ -174,24 +204,24 @@ document.addEventListener("DOMContentLoaded", APP.init);
 
 // ? Navigation
 
-// * Searches for movies and shows happen on the same page - index.html
-// * Search results are shown on index.html
+// ? Searches for movies and shows happen on the same page - index.html
+// ? Search results are shown on index.html
 // ! The cast for a show or movie is shown on credits.html
 // * Details about the search and/or show and/or movie should be passed through the hash value of the url
 // * As an alternative to the hash values you can use history.state for most navigation. However, you will still need a way to pass parameters between index.html and credits.html. This will require hash or querystring values.
 // * Users need to be able to search for a movie or a tv show from either page
-// * The user should be able to click the back and forward buttons in the browser to step through previous searches
+// * The user should be able to click the back and forward buttons in the browser to step through previous searches. popstate()
 
 // ? Features
 
-// * The user should be able to easily tell if they are searching for a movie or a show.
-// * The user should be able to easily tell if they viewing search results for a movie or a show.
-// * If the image value for a movie, show, or actor is null then there needs to be a placeholder image in the card.
+// ? The user should be able to easily tell if they are searching for a movie or a show.
+// ? The user should be able to easily tell if they viewing search results for a movie or a show.
+// ? If the image value for a movie, show, or actor is null then there needs to be a placeholder image in the card.
 // * Finished version of the site runs on Github Pages from the main branch.
 
 // ? Code
 
-// * Main script loaded as a module.
+// ? Main script loaded as a module.
 // * Namespaces are used to hold all your functions.
 // * NetworkError class is imported to be used.
 // * History.pushState, History.replaceState, and window.location are used for navigation.

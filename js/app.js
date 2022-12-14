@@ -1,52 +1,51 @@
 const APP = {
   df: new DocumentFragment(),
-  ul: document.querySelector(".movie__ul"),
   cat: "",
   queryString: "",
-  url: "",
   h3MessageScreen: document.querySelector(".content__message"),
   init: () => {
-    APP.checkState();
-    APP.checkStateChange();
-    APP.getCategory();
-    APP.getData();
+    if (location.hash) {
+      const splitArray = location.hash.split("/");
+      if (document.body.id !== "index") {
+        const [, media, id, title] = splitArray;
+        APP.creditsFetch(media, id);
+      }
+    }
+    APP.eventListeners();
   },
-  getCategory: () => {
+  eventListeners: () => {
     let category = document.querySelector(".radio__buttons");
-    category.addEventListener("change", (ev) => {
-      APP.cat = ev.target.getAttribute("value");
-      console.log(APP.cat);
-    });
+    category.addEventListener("change", APP.getCategory);
+    document.querySelector("form").addEventListener("submit", APP.getData);
+    window.addEventListener("popstate", APP.stateHandler);
+  },
+  getCategory: (ev) => {
+    APP.cat = ev.target.getAttribute("value");
+    console.log(APP.cat);
   },
   getData: (ev) => {
-    //so submit works the controllers need to be in a <form>
-    //submit works with both CLICK and ENTER
-    document.querySelector("form").addEventListener("submit", (ev) => {
-      ev.preventDefault();
-      let input = document.querySelector("#keyWordInput").value.trim();
-      APP.queryString = input;
-      if (!APP.cat) {
-        APP.h3MessageScreen.innerHTML = "";
-        APP.showScreenMessage("Please select a category");
-        console.log("Please select a category");
-        return;
-      }
-      if (!APP.queryString) {
-        APP.showScreenMessage("Please write in the field");
-        console.log("Please write in the field");
-        return;
-      }
-      console.log(APP.queryString);
-      APP.getURL(APP.cat, APP.queryString);
-    });
+    ev.preventDefault();
+    let input = document.querySelector("#keyWordInput").value.trim();
+    APP.queryString = input;
+    if (!APP.cat) {
+      APP.h3MessageScreen.innerHTML = "";
+      APP.showScreenMessage("Please select a category");
+      console.log("Please select a category");
+      return;
+    }
+    if (!APP.queryString) {
+      APP.showScreenMessage("Please write in the field");
+      console.log("Please write in the field");
+      return;
+    }
+    //object, title (ignore), url concatenate
+    history.pushState({}, "", "#" + `/${APP.cat}/${APP.queryString}`);
+    APP.getFetch(APP.cat, APP.queryString);
   },
-  getURL: (media, string) => {
+  getFetch: (media, string) => {
     let key = "516113cfd57ae5d6cb785a6c5bb76fc0";
-    APP.url = `https://api.themoviedb.org/3/search/${media}?query=${string}&api_key=${key}`;
-    console.log(APP.url);
-    APP.getFetch(APP.url);
-  },
-  getFetch: (url) => {
+    let url = `https://api.themoviedb.org/3/search/${media}?query=${string}&api_key=${key}`;
+    let queryBox = document.querySelector("#keyWordInput");
     fetch(url)
       .then((response) => {
         console.log("got response");
@@ -54,31 +53,29 @@ const APP = {
       })
       .then((data) => {
         console.log(data);
+        let ul = document.querySelector(".movie__ul");
         if (data.results.length === 0) {
           APP.h3MessageScreen.innerHTML = "";
-          APP.ul.innerHTML = "";
+          ul.innerHTML = "";
           APP.showScreenMessage(
-            `There are no results for "${APP.queryString}", please try another title.`
+            `There are no results for "${queryBox.value}", please try another title.`
           );
         } else if (APP.cat === "movie") {
           console.log("movie is working");
           APP.h3MessageScreen.innerHTML = "";
-          APP.ul.innerHTML = "";
+          ul.innerHTML = "";
           APP.movieConstructor(data);
           APP.showScreenMessage(
-            `Movie titles related to: "${APP.queryString}" `
+            `Movie titles related to: "${queryBox.value}" `
           );
         } else {
-          APP.ul.innerHTML = "";
+          ul.innerHTML = "";
           APP.h3MessageScreen.innerHTML = "";
           console.log("tv is working");
           APP.tvConstructor(data);
-          APP.showScreenMessage(`TV titles related to: "${APP.queryString}"`);
+          APP.showScreenMessage(`TV titles related to: "${queryBox.value}"`);
         }
-        // APP.showScreenMessage(
-        //   `No results for titles related to: "${APP.queryString}" `
-        // );
-        APP.ul.append(APP.df);
+        ul.append(APP.df);
       });
   },
   movieConstructor: function (data) {
@@ -90,15 +87,10 @@ const APP = {
         <p>${item.overview}</p></div>
         `;
       } else {
-        li.innerHTML = `<a class="a__li" href="/credits.html#/movie/${item.id}/${APP.queryString}"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.original_title}</h3>
+        li.innerHTML = `<a class="a__li" href="/credits.html#/movie/${item.id}"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.original_title}</h3>
         <p>${item.overview}</p><button>Learn More</button></div>`;
       }
       APP.df.append(li);
-      history.pushState(
-        { cat: APP.cat, queryString: APP.queryString },
-        "",
-        `index.html#/movie/${APP.queryString}`
-      );
     });
   },
   tvConstructor: function (data) {
@@ -115,40 +107,45 @@ const APP = {
         <p>${item.overview}</p></div>`;
       }
       APP.df.append(li);
-      history.pushState(
-        {
-          cat: APP.cat,
-          queryString: APP.queryString,
-        },
-        "",
-        `index.html#/tv/${APP.queryString}`
-      );
     });
   },
   showScreenMessage: (msg) => {
     APP.h3MessageScreen.innerHTML = msg;
-    // APP.df.append(li);
   },
-  checkState: function () {
-    if (history.state) {
-      let tvButton = document.querySelector("#tv-series");
-      let movieButton = document.querySelector("#movies");
-      let searchBox = document.querySelector("#keyWordInput");
-      if (history.state["cat"] === "movie") {
-        movieButton.checked = true;
+  stateHandler: function (ev) {
+    console.log("changed");
+    if (location.hash) {
+      if (document.body.id === "index") {
+        let [, cat, queryString] = location.hash.split("/");
+        APP.getFetch(cat, decodeURIComponent(queryString));
+        APP.queryString = document.querySelector("#keyWordInput");
+        APP.queryString.value = decodeURIComponent(queryString);
+        if (cat === "movie") {
+          document.querySelector("#movies").checked = true;
+        } else {
+          document.querySelector("#tv-series").checked = true;
+        }
       } else {
-        tvButton.checked = true;
+        let [, cat, id] = location.hash.split("/");
+        APP.creditsFetch(cat, id);
       }
-      searchBox.value = history.state["queryString"];
-      APP.cat = history.state["cat"];
-      APP.queryString = history.state["queryString"];
     }
   },
-  checkStateChange: function () {
-    window.addEventListener("popstate", () => {
-      console.log("changed");
-      APP.checkState();
-    });
+  creditsFetch: (cat, id) => {
+    console.log(cat, id);
+    let key = "516113cfd57ae5d6cb785a6c5bb76fc0";
+    let url = `https://api.themoviedb.org/3/${cat}/${id}/credits?api_key=${key}`;
+    console.log(url);
+    fetch(url)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        let ul = document.querySelector(".credits__ul");
+        ul.innerHTML = `<h3>HELLOOOOOOOOO<h3>`;
+      })
+      .catch();
   },
 };
 

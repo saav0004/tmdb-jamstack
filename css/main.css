@@ -173,7 +173,39 @@ a {
 
 .radio__buttons {
   color: var(--mango);
+  /* maybe delete at bottom */
+  padding: 2rem 0 2rem 0;
 }
+
+/* radio styling */
+
+/* .radio__buttons input[type="radio"] {
+  display: none;
+}
+
+.radio__buttons label {
+  border: 2px solid var(--lapis-lazuli);
+  border-radius: 5px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.radio__buttons label:before {
+  content: "";
+  height: 2rem;
+  width: 2rem;
+  border: 0.2rem solid var(--amaranth-red);
+  border-radius: 50%;
+  margin-right: 2rem;
+}
+
+.radio__buttons input[type="radio"]:checked + label {
+  background-color: var(--rich-black-fogra-29);
+  color: #fff;
+} */
+
+/* radio styling */
 
 .label {
   color: var(--mango);

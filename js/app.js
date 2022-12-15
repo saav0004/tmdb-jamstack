@@ -107,7 +107,7 @@ const APP = {
         <p>${item.overview}</p></div>
         `;
       } else {
-        li.innerHTML = `<a class="a__li" href="/credits.html#/movie/${item.id}"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.original_title}</h3>
+        li.innerHTML = `<a class="a__li" href=credits.html#/movie/${item.id}><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.original_title}</h3>
         <p>${item.overview}</p><button>Learn More</button></div>`;
       }
       APP.df.append(li);
@@ -123,7 +123,7 @@ const APP = {
         <a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"><a/><div><h3>${item.name}</h3>
         <p>${item.overview}</p></div>`;
       } else {
-        li.innerHTML = `<a class="a__li" href="/credits.html#/tv/${item.id}/${APP.queryString}"><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.name}</h3>
+        li.innerHTML = `<a class="a__li" href=/credits.html#/tv/${item.id}/${APP.queryString}><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.name}</h3>
         <p>${item.overview}</p></div>`;
       }
       APP.df.append(li);

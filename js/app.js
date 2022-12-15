@@ -6,9 +6,22 @@ const APP = {
   init: () => {
     if (location.hash) {
       const splitArray = location.hash.split("/");
+      const [, media, id, title] = splitArray;
       if (document.body.id !== "index") {
-        const [, media, id, title] = splitArray;
+        // console.log("estoy en el credit fetch");
         APP.creditsFetch(media, id);
+      } else {
+        APP.getFetch(media, id);
+        // console.log(splitArray);
+        let urlInput = document.querySelector("#keyWordInput");
+        urlInput.value = decodeURIComponent(id);
+        APP.cat = media;
+
+        if (media === "movie") {
+          document.querySelector("#movies").checked = true;
+        } else {
+          document.querySelector("#tv-series").checked = true;
+        }
       }
     }
     APP.eventListeners();
@@ -21,7 +34,7 @@ const APP = {
   },
   getCategory: (ev) => {
     APP.cat = ev.target.getAttribute("value");
-    console.log(APP.cat);
+    // console.log(APP.cat);
   },
   getData: (ev) => {
     ev.preventDefault();
@@ -30,12 +43,12 @@ const APP = {
     if (!APP.cat) {
       APP.h3MessageScreen.innerHTML = "";
       APP.showScreenMessage("Please select a category");
-      console.log("Please select a category");
+      // console.log("Please select a category");
       return;
     }
     if (!APP.queryString) {
       APP.showScreenMessage("Please write in the field");
-      console.log("Please write in the field");
+      // console.log("Please write in the field");
       return;
     }
     //object, title (ignore), url concatenate
@@ -48,11 +61,11 @@ const APP = {
     let queryBox = document.querySelector("#keyWordInput");
     fetch(url)
       .then((response) => {
-        console.log("got response");
+        // console.log("got response");
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         let ul = document.querySelector(".movie__ul");
         if (data.results.length === 0) {
           APP.h3MessageScreen.innerHTML = "";
@@ -61,7 +74,7 @@ const APP = {
             `There are no results for "${queryBox.value}", please try another title.`
           );
         } else if (APP.cat === "movie") {
-          console.log("movie is working");
+          // console.log("movie is working");
           APP.h3MessageScreen.innerHTML = "";
           ul.innerHTML = "";
           APP.movieConstructor(data);
@@ -71,7 +84,7 @@ const APP = {
         } else {
           ul.innerHTML = "";
           APP.h3MessageScreen.innerHTML = "";
-          console.log("tv is working");
+          // console.log("tv is working");
           APP.tvConstructor(data);
           APP.showScreenMessage(`TV titles related to: "${queryBox.value}"`);
         }
@@ -79,8 +92,11 @@ const APP = {
       });
   },
   movieConstructor: function (data) {
-    console.log(data["results"]);
+    // console.log(data["results"]);
     data["results"].forEach((item) => {
+      console.log(item);
+      console.log(item.original_title);
+      console.log(item.id);
       const li = document.createElement("li");
       if (item.poster_path === null) {
         li.innerHTML = `<a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"></a><div><h3>${item.original_title}</h3>
@@ -120,6 +136,7 @@ const APP = {
         APP.getFetch(cat, decodeURIComponent(queryString));
         APP.queryString = document.querySelector("#keyWordInput");
         APP.queryString.value = decodeURIComponent(queryString);
+        APP.cat = cat;
         if (cat === "movie") {
           document.querySelector("#movies").checked = true;
         } else {
@@ -141,11 +158,21 @@ const APP = {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
-        let ul = document.querySelector(".credits__ul");
-        ul.innerHTML = `<h3>HELLOOOOOOOOO<h3>`;
+        APP.constructCredits(data);
       })
       .catch();
+  },
+  constructCredits: (data) => {
+    let ul = document.querySelector(".credits__ul");
+    ul.innerHTML = data.cast.map((item) => {
+      if (item.profile_path === null) {
+        return `<li><img class="poster__img" src="../images/film-reel-cinema-svgrepo-com.svg"></li>`;
+      } else {
+        return `"<li><img class="poster__img" src="https://image.tmdb.org/t/p/original/${item.profile_path}">
+        <h3>${item.name}</h3>
+        <p>Popularity: ${item.popularity}/100</p></li>"`;
+      }
+    });
   },
 };
 

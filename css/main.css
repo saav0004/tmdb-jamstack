@@ -219,3 +219,13 @@ a {
 .main__content {
   padding-top: 2rem;
 }
+
+.credits__ul {
+  display: grid;
+}
+
+@media only screen and (min-width: 45) {
+  .credits__ul {
+    grid-template-columns: repeat(4fr 3fr);
+  }
+}

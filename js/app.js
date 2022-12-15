@@ -39,21 +39,25 @@ const APP = {
   getData: (ev) => {
     ev.preventDefault();
     let input = document.querySelector("#keyWordInput").value.trim();
-    APP.queryString = input;
-    if (!APP.cat) {
-      APP.h3MessageScreen.innerHTML = "";
-      APP.showScreenMessage("Please select a category");
-      // console.log("Please select a category");
-      return;
+    if (document.body.id === "index") {
+      APP.queryString = input;
+      if (!APP.cat) {
+        APP.h3MessageScreen.innerHTML = "";
+        APP.showScreenMessage("Please select a category");
+        // console.log("Please select a category");
+        return;
+      }
+      if (!APP.queryString) {
+        APP.showScreenMessage("Please write in the field");
+        // console.log("Please write in the field");
+        return;
+      }
+      //object, title (ignore), url concatenate
+      history.pushState({}, "", "#" + `/${APP.cat}/${APP.queryString}`);
+      APP.getFetch(APP.cat, APP.queryString);
+    } else {
+      location.href = `index.html#/${APP.cat}/${input}`;
     }
-    if (!APP.queryString) {
-      APP.showScreenMessage("Please write in the field");
-      // console.log("Please write in the field");
-      return;
-    }
-    //object, title (ignore), url concatenate
-    history.pushState({}, "", "#" + `/${APP.cat}/${APP.queryString}`);
-    APP.getFetch(APP.cat, APP.queryString);
   },
   getFetch: (media, string) => {
     let key = "516113cfd57ae5d6cb785a6c5bb76fc0";
@@ -99,7 +103,7 @@ const APP = {
       console.log(item.id);
       const li = document.createElement("li");
       if (item.poster_path === null) {
-        li.innerHTML = `<a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"></a><div><h3>${item.original_title}</h3>
+        li.innerHTML = `<a class="a__li" href="#"><img class="poster__img" src="../images/film-reel-cinema-svgrepo-com.svg"></a><div><h3>${item.original_title}</h3>
         <p>${item.overview}</p></div>
         `;
       } else {

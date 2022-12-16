@@ -192,15 +192,17 @@ const APP = {
   },
   constructCredits: (data) => {
     let ul = document.querySelector(".credits__ul");
-    ul.innerHTML = data.cast.map((item) => {
-      if (item.profile_path === null) {
-        return `<li class="credits__li"><img class="poster__img" src="../images/film-reel-cinema-svgrepo-com.svg"></li>`;
-      } else {
-        return `"<li class="credits__li"><img class="poster__img" src="https://image.tmdb.org/t/p/original/${item.profile_path}">
+    ul.innerHTML = data.cast
+      .map((item) => {
+        if (item.profile_path === null) {
+          return `<li class="credits__li"><img class="poster__img" src="../images/film-reel-cinema-svgrepo-com.svg"></li>`;
+        } else {
+          return `<li class="credits__li"><img class="poster__img" src="https://image.tmdb.org/t/p/original/${item.profile_path}">
         <h3>${item.name}</h3>
-        <p>Popularity: ${item.popularity}/100</p></li>"`;
-      }
-    });
+        <p>Popularity: ${item.popularity}/100</p></li>`;
+        }
+      })
+      .join("");
   },
   errorFunction: (err) => {
     if (err.status === 404) {
@@ -247,9 +249,9 @@ document.addEventListener("DOMContentLoaded", APP.init);
 // ! Project Checklist
 // ? Design
 
-// ! Responsive mobile first layout.
-// ! Show|movie cards change orientation to make better use of available space.
-// ! Credit cards shown as a grid.
+// * Responsive mobile first layout.
+// * Show|movie cards change orientation to make better use of available space.
+// * Credit cards shown as a grid.
 // * Custom accessible colour scheme.
 // * Google fonts used.
 // * All the colours and font sizes are accessible and readable at all screen sizes.
@@ -258,8 +260,8 @@ document.addEventListener("DOMContentLoaded", APP.init);
 // ? Security
 
 // * Use Content-Security-Policy <meta> tag to limit what is allowed to be loaded
-// ! Use NetworkError class to track and handle fetch response problems
-// ! All errors are reported to the user on the webpage, in the HTML.
+// * Use NetworkError class to track and handle fetch response problems
+// * All errors are reported to the user on the webpage, in the HTML.
 
 // ? Navigation
 
@@ -276,17 +278,17 @@ document.addEventListener("DOMContentLoaded", APP.init);
 // * The user should be able to easily tell if they are searching for a movie or a show.
 // * The user should be able to easily tell if they viewing search results for a movie or a show.
 // * If the image value for a movie, show, or actor is null then there needs to be a placeholder image in the card.
-// ! Finished version of the site runs on Github Pages from the main branch.
+// * Finished version of the site runs on Github Pages from the main branch.
 
 // ? Code
 
 // * Main script loaded as a module.
 // * Namespaces are used to hold all your functions.
-// ! NetworkError class is imported to be used.
+// * NetworkError class is imported to be used.
 // * History.pushState, History.replaceState, and window.location are used for navigation.
 // * Popstate event used to capture navigation done with the back and forward buttons.
 // * Search is done with fetch and TMDB API.
-// ! All the console.log commands are removed or commented out in the final version.
-// ! No errors appearing in the console while the app runs.
+// * All the console.log commands are removed or commented out in the final version.
+// * No errors appearing in the console while the app runs.
 // * All HTML, static and generated, is valid.
 // * CSS, fonts, scripts, and images are all in their own folders.

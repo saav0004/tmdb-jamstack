@@ -77,6 +77,9 @@ const APP = {
     fetch(url)
       .then((response) => {
         // console.log("got response");
+        if (!response.ok) {
+          throw new NetworkError("API call not working", response);
+        }
         return response.json();
       })
       .then((data) => {
@@ -104,6 +107,9 @@ const APP = {
           APP.showScreenMessage(`TV titles related to: "${queryBox.value}"`);
         }
         ul.append(APP.df);
+      })
+      .catch((err) => {
+        return APP.errorFunction(true, err);
       });
   },
   movieConstructor: function (data) {
@@ -172,12 +178,17 @@ const APP = {
     console.log(url);
     fetch(url)
       .then((response) => {
+        if (!response.ok) {
+          throw new NetworkError("API call not working", response);
+        }
         return response.json();
       })
       .then((data) => {
         APP.constructCredits(data);
       })
-      .catch();
+      .catch((err) => {
+        return APP.errorFunction(true, err);
+      });
   },
   constructCredits: (data) => {
     let ul = document.querySelector(".credits__ul");
@@ -190,6 +201,13 @@ const APP = {
         <p>Popularity: ${item.popularity}/100</p></li>"`;
       }
     });
+  },
+  errorFunction: (err) => {
+    if (err.status === 404) {
+      APP.h3MessageScreen.innerHTML = `Hmm...We were unable to obtain the info information... :( Try again!`;
+    } else {
+      APP.h3MessageScreen.innerHTML = `Please check your internet connection and try again.`;
+    }
   },
 };
 
@@ -229,25 +247,25 @@ document.addEventListener("DOMContentLoaded", APP.init);
 // ! Project Checklist
 // ? Design
 
-// * Responsive mobile first layout.
-// * Show|movie cards change orientation to make better use of available space.
-// * Credit cards shown as a grid.
-// ? Custom accessible colour scheme.
-// ? Google fonts used.
+// ! Responsive mobile first layout.
+// ! Show|movie cards change orientation to make better use of available space.
+// ! Credit cards shown as a grid.
+// * Custom accessible colour scheme.
+// * Google fonts used.
 // * All the colours and font sizes are accessible and readable at all screen sizes.
 // * Good design principles are applied.
 
 // ? Security
 
 // * Use Content-Security-Policy <meta> tag to limit what is allowed to be loaded
-// * Use NetworkError class to track and handle fetch response problems
-// * All errors are reported to the user on the webpage, in the HTML.
+// ! Use NetworkError class to track and handle fetch response problems
+// ! All errors are reported to the user on the webpage, in the HTML.
 
 // ? Navigation
 
-// ? Searches for movies and shows happen on the same page - index.html
-// ? Search results are shown on index.html
-// ! The cast for a show or movie is shown on credits.html
+// * Searches for movies and shows happen on the same page - index.html
+// * Search results are shown on index.html
+// * The cast for a show or movie is shown on credits.html
 // * Details about the search and/or show and/or movie should be passed through the hash value of the url
 // * As an alternative to the hash values you can use history.state for most navigation. However, you will still need a way to pass parameters between index.html and credits.html. This will require hash or querystring values.
 // * Users need to be able to search for a movie or a tv show from either page
@@ -255,20 +273,20 @@ document.addEventListener("DOMContentLoaded", APP.init);
 
 // ? Features
 
-// ? The user should be able to easily tell if they are searching for a movie or a show.
-// ? The user should be able to easily tell if they viewing search results for a movie or a show.
-// ? If the image value for a movie, show, or actor is null then there needs to be a placeholder image in the card.
-// * Finished version of the site runs on Github Pages from the main branch.
+// * The user should be able to easily tell if they are searching for a movie or a show.
+// * The user should be able to easily tell if they viewing search results for a movie or a show.
+// * If the image value for a movie, show, or actor is null then there needs to be a placeholder image in the card.
+// ! Finished version of the site runs on Github Pages from the main branch.
 
 // ? Code
 
-// ? Main script loaded as a module.
+// * Main script loaded as a module.
 // * Namespaces are used to hold all your functions.
-// * NetworkError class is imported to be used.
+// ! NetworkError class is imported to be used.
 // * History.pushState, History.replaceState, and window.location are used for navigation.
 // * Popstate event used to capture navigation done with the back and forward buttons.
 // * Search is done with fetch and TMDB API.
-// * All the console.log commands are removed or commented out in the final version.
-// * No errors appearing in the console while the app runs.
+// ! All the console.log commands are removed or commented out in the final version.
+// ! No errors appearing in the console while the app runs.
 // * All HTML, static and generated, is valid.
 // * CSS, fonts, scripts, and images are all in their own folders.

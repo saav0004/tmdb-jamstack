@@ -124,7 +124,7 @@ const APP = {
         <a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"><a/><div><h3>${item.name}</h3>
         <p>${item.overview}</p><a href=credits.html#/tv/${item.id}/${APP.queryString}><button class="btn">Learn More</button></a></div>`;
       } else {
-        li.innerHTML = `<a class="a__li" href=/credits.html#/tv/${item.id}/${APP.queryString}><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.name}</h3>
+        li.innerHTML = `<a class="a__li" href=credits.html#/tv/${item.id}/${APP.queryString}><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.name}</h3>
         <p>${item.overview}</p><a href=credits.html#/tv/${item.id}/${APP.queryString}><button class="btn">Learn More</button></a></div>`;
       }
       APP.df.append(li);

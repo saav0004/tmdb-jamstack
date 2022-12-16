@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta Content-Security-Policy: default-src 'self';font-src
+    fonts.gstatic.com;style-src 'self' fonts.googleapis.com />
+
     <title>Movie Database</title>
     <link rel="stylesheet" href="./css/main.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,7 +22,9 @@
     <header class="header">
       <div class="banner container">
         <a href="./index.html"><h1 class="title__h1">EZ VISION</h1></a>
-        <h2 class="title__h2">Watch anything you want</h2>
+        <h2 class="title__h2">
+          Search for a movie or TV show and learn more about their cast.
+        </h2>
         <div class="search__content">
           <form action="/">
             <div class="form__movies">

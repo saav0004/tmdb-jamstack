@@ -1,3 +1,5 @@
+import { NetworkError } from "./utils.js";
+
 const APP = {
   df: new DocumentFragment(),
   cat: "",
@@ -9,7 +11,15 @@ const APP = {
       const [, media, id, title] = splitArray;
       if (document.body.id !== "index") {
         // console.log("estoy en el credit fetch");
-        APP.creditsFetch(media, id);
+        // title = APP.queryString;
+        if (media === "movie") {
+          document.querySelector("#movies").checked = true;
+          APP.cat = media;
+        } else {
+          document.querySelector("#tv-series").checked = true;
+          APP.cat = media;
+        }
+        APP.creditsFetch(media, id, title);
       } else {
         APP.getFetch(media, id);
         // console.log(splitArray);
@@ -60,6 +70,7 @@ const APP = {
     }
   },
   getFetch: (media, string) => {
+    console.log(APP.cat);
     let key = "516113cfd57ae5d6cb785a6c5bb76fc0";
     let url = `https://api.themoviedb.org/3/search/${media}?query=${string}&api_key=${key}`;
     let queryBox = document.querySelector("#keyWordInput");
@@ -98,17 +109,14 @@ const APP = {
   movieConstructor: function (data) {
     // console.log(data["results"]);
     data["results"].forEach((item) => {
-      console.log(item);
-      console.log(item.original_title);
-      console.log(item.id);
       const li = document.createElement("li");
       if (item.poster_path === null) {
         li.innerHTML = `<a class="a__li" href="#"><img class="poster__img" src="../images/film-reel-cinema-svgrepo-com.svg"></a><div><h3>${item.original_title}</h3>
-        <p>${item.overview}</p></div>
+        <p>${item.overview}</p><a href=credits.html#/movie/${item.id}/${APP.queryString}><button class="btn">Learn More</button></a></div>
         `;
       } else {
-        li.innerHTML = `<a class="a__li" href=credits.html#/movie/${item.id}><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.original_title}</h3>
-        <p>${item.overview}</p><button>Learn More</button></div>`;
+        li.innerHTML = `<a class="a__li" href=credits.html#/movie/${item.id}/${APP.queryString}><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.original_title}</h3>
+        <p>${item.overview}</p><a href=credits.html#/movie/${item.id}><button class="btn">Learn More</button></a></div>`;
       }
       APP.df.append(li);
     });
@@ -121,10 +129,10 @@ const APP = {
       if (item.poster_path === null) {
         li.innerHTML = `
         <a class="a__li" href="#"><img class="poster__img" src="./images/placeholder.png"><a/><div><h3>${item.name}</h3>
-        <p>${item.overview}</p></div>`;
+        <p>${item.overview}</p><a href=credits.html#/tv/${item.id}/${APP.queryString}><button class="btn">Learn More</button></a></div>`;
       } else {
         li.innerHTML = `<a class="a__li" href=/credits.html#/tv/${item.id}/${APP.queryString}><img class="poster__img" src="https://image.tmdb.org/t/p/w500/${item.poster_path}"></a><div><h3>${item.name}</h3>
-        <p>${item.overview}</p></div>`;
+        <p>${item.overview}</p><a href=credits.html#/tv/${item.id}/${APP.queryString}><button class="btn">Learn More</button></a></div>`;
       }
       APP.df.append(li);
     });
@@ -137,10 +145,10 @@ const APP = {
     if (location.hash) {
       if (document.body.id === "index") {
         let [, cat, queryString] = location.hash.split("/");
-        APP.getFetch(cat, decodeURIComponent(queryString));
+        APP.cat = cat;
         APP.queryString = document.querySelector("#keyWordInput");
         APP.queryString.value = decodeURIComponent(queryString);
-        APP.cat = cat;
+        APP.getFetch(cat, decodeURIComponent(queryString));
         if (cat === "movie") {
           document.querySelector("#movies").checked = true;
         } else {
@@ -148,12 +156,17 @@ const APP = {
         }
       } else {
         let [, cat, id] = location.hash.split("/");
+        APP.cat = cat;
         APP.creditsFetch(cat, id);
       }
     }
   },
-  creditsFetch: (cat, id) => {
+  creditsFetch: (cat, id, title) => {
+    console.log(APP.cat);
+    let userInput = document.getElementById("keyWordInput");
     console.log(cat, id);
+    console.log(title);
+    userInput.value = decodeURIComponent(title);
     let key = "516113cfd57ae5d6cb785a6c5bb76fc0";
     let url = `https://api.themoviedb.org/3/${cat}/${id}/credits?api_key=${key}`;
     console.log(url);
@@ -170,9 +183,9 @@ const APP = {
     let ul = document.querySelector(".credits__ul");
     ul.innerHTML = data.cast.map((item) => {
       if (item.profile_path === null) {
-        return `<li><img class="poster__img" src="../images/film-reel-cinema-svgrepo-com.svg"></li>`;
+        return `<li class="credits__li"><img class="poster__img" src="../images/film-reel-cinema-svgrepo-com.svg"></li>`;
       } else {
-        return `"<li><img class="poster__img" src="https://image.tmdb.org/t/p/original/${item.profile_path}">
+        return `"<li class="credits__li"><img class="poster__img" src="https://image.tmdb.org/t/p/original/${item.profile_path}">
         <h3>${item.name}</h3>
         <p>Popularity: ${item.popularity}/100</p></li>"`;
       }

@@ -196,3 +196,5 @@ const APP = {
 };
 
 document.addEventListener("DOMContentLoaded", APP.init);
+
+//checking new updates, ignore.
